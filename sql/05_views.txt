@@ -1,0 +1,17 @@
+purpose:
+
+creates views to consult information without having to write complex queries each time
+
+the available views are: 
+- vw_ActiveReservations
+- vw_RoomAvailability
+- vw_ReservationCharges 
+
+
+verification query:
+
+SELECT TOP (10) * FROM dbo.vw_ActiveReservations;
+SELECT TOP (10) * FROM dbo.vw_RoomAvailability;
+SELECT TOP (10) * FROM dbo.vw_ReservationCharges;
+
+

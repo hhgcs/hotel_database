@@ -1,0 +1,15 @@
+Purpose: 
+
+Generates the necessary tables for the system
+
+- Clientes y usuarios: `CLIENT`, `USERS`, `ROLES`
+- Reservas y habitaciones: `RESERVATIONS`, `RESERVATION_STATES`, `ROOMS`, `ROOM_TYPES`, `ROOM_STATES`, `RESERVATION_ROOMS`
+- Estancias y servicios: `STAYS`, `STAY_STATES`, `SERVICES`, `RESERVATION_SERVICES`, `RESERVATION_SERVICE_STATES`
+- Cargos y pagos: `CHARGES`, `CHARGE_TYPES`, `PAYMENTS`, `PAYMENT_METHODS`, `PAYMENT_STATES`
+
+Verification query:
+
+SELECT name
+FROM sys.tables
+ORDER BY name;
+

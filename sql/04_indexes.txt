@@ -1,0 +1,14 @@
+purpose:
+
+adding indexes to the database, indexes are useful for optimizing frequent transactions in terms of resources
+
+verification query (query the existing indexes): 
+
+SELECT
+    OBJECT_NAME(object_id) AS table_name,
+    name AS index_name
+FROM sys.indexes
+WHERE name LIKE 'IX_%'
+ORDER BY table_name, index_name;
+
+

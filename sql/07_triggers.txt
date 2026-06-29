@@ -1,0 +1,13 @@
+purpose:
+
+adding triggers to validate data integrity
+
+triggers available:
+	- trg_CLIENT_EncryptionGuard -- verifies teh client data is encrypted and the hash corresponds with the original email
+	- trg_RESERVATION_ROOMS_Integrity -- prevents that any non-available room is added to a reservation.
+
+verification query:
+
+SELECT name, OBJECT_NAME(parent_id) AS table_name
+FROM sys.triggers
+ORDER BY name;

@@ -1,0 +1,21 @@
+purpose:
+
+demoing the complete flow for the system.
+
+flow:
+1) client creation (with encrypted data)
+2) reservation creation
+3) automatiom of room assignment
+4) client check-in
+5) room state change to "Occupied"
+6) service reservation
+7) generation of service charge
+8) client check-out
+9) generation of room charge
+10) payment processing
+11) reservation state change to "Finished"
+12) room state change to "Cleaning"
+
+verification query:
+The query itself is the verification query, to verify just execute after the database has been setup (00_init_all.sql)
+

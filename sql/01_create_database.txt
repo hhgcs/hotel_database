@@ -1,0 +1,7 @@
+Purpose: 
+The script creates the HotelDatabase if it doesn't exist yet and sets the recovery model to simple
+
+Verification query:
+SELECT name, recovery_model_desc
+FROM sys.databases
+WHERE name = N'HotelDatabase';

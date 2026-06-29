@@ -1,0 +1,21 @@
+purpose:
+
+creating store procedures for the main transactions in the system
+
+it creates: 
+	- sp_CreateClient 
+	- sp_CreateUser 
+	- sp_CreateReservation
+	- sp_CheckInClient
+	- sp_ReserveService
+	- sp_CheckoutClient
+
+note: error handling is performed by using SET XACT_ABORT ON and TRY/CATCH, the former reverts any transaction if error is present
+
+verificaiton query (list the available store procedures):
+
+SELECT name
+FROM sys.procedures
+WHERE name LIKE 'sp_%'
+ORDER BY name;
+

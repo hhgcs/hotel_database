@@ -1,0 +1,212 @@
+USE HotelDatabase;
+GO
+
+SET NOCOUNT ON;
+GO
+
+DROP TABLE IF EXISTS dbo.AUDIT_LOG;
+DROP TABLE IF EXISTS dbo.PAYMENTS;
+DROP TABLE IF EXISTS dbo.PAYMENT_STATES;
+DROP TABLE IF EXISTS dbo.PAYMENT_METHODS;
+DROP TABLE IF EXISTS dbo.CHARGES;
+DROP TABLE IF EXISTS dbo.CHARGE_TYPES;
+DROP TABLE IF EXISTS dbo.RESERVATION_SERVICES;
+DROP TABLE IF EXISTS dbo.RESERVATION_SERVICE_STATES;
+DROP TABLE IF EXISTS dbo.SERVICES;
+DROP TABLE IF EXISTS dbo.STAYS;
+DROP TABLE IF EXISTS dbo.STAY_STATES;
+DROP TABLE IF EXISTS dbo.RESERVATION_ROOMS;
+DROP TABLE IF EXISTS dbo.ROOMS;
+DROP TABLE IF EXISTS dbo.ROOM_STATES;
+DROP TABLE IF EXISTS dbo.ROOM_TYPES;
+DROP TABLE IF EXISTS dbo.RESERVATIONS;
+DROP TABLE IF EXISTS dbo.RESERVATION_STATES;
+DROP TABLE IF EXISTS dbo.USERS;
+DROP TABLE IF EXISTS dbo.ROLES;
+DROP TABLE IF EXISTS dbo.CLIENT;
+GO
+
+CREATE TABLE dbo.CLIENT
+(
+    client_id INT IDENTITY(1,1) NOT NULL,
+    first_name NVARCHAR(80) NOT NULL,
+    last_name NVARCHAR(80) NOT NULL,
+    email_encrypted VARBINARY(MAX) NOT NULL,
+    email_hash VARBINARY(32) NOT NULL,
+    phone_number_encrypted VARBINARY(MAX) NULL,
+    registration_date DATETIME2(0) NOT NULL CONSTRAINT DF_CLIENT_registration_date DEFAULT SYSDATETIME(),
+    CONSTRAINT PK_CLIENT PRIMARY KEY CLUSTERED (client_id)
+);
+
+CREATE TABLE dbo.ROLES
+(
+    role_id INT IDENTITY(1,1) NOT NULL,
+    rol_name NVARCHAR(60) NOT NULL,
+    CONSTRAINT PK_ROLES PRIMARY KEY CLUSTERED (role_id)
+);
+
+CREATE TABLE dbo.USERS
+(
+    user_id INT IDENTITY(1,1) NOT NULL,
+    first_name NVARCHAR(80) NOT NULL,
+    last_name NVARCHAR(80) NOT NULL,
+    email NVARCHAR(320) NOT NULL,
+    salt VARBINARY(16) NOT NULL,
+    role_id INT NOT NULL,
+    password_hash VARBINARY(32) NOT NULL,
+    username NVARCHAR(60) NOT NULL,
+    active BIT NOT NULL CONSTRAINT DF_USERS_active DEFAULT 1,
+    creation_date DATETIME2(0) NOT NULL CONSTRAINT DF_USERS_creation_date DEFAULT SYSDATETIME(),
+    CONSTRAINT PK_USERS PRIMARY KEY CLUSTERED (user_id)
+);
+
+CREATE TABLE dbo.RESERVATION_STATES
+(
+    reservation_state_id INT IDENTITY(1,1) NOT NULL,
+    reservation_state_name NVARCHAR(40) NOT NULL,
+    CONSTRAINT PK_RESERVATION_STATES PRIMARY KEY CLUSTERED (reservation_state_id)
+);
+
+CREATE TABLE dbo.RESERVATIONS
+(
+    reservation_id INT IDENTITY(1,1) NOT NULL,
+    client_id INT NOT NULL,
+    check_in_date DATE NOT NULL,
+    check_out_date DATE NOT NULL,
+    reservation_state_id INT NOT NULL,
+    creation_date DATETIME2(0) NOT NULL CONSTRAINT DF_RESERVATIONS_creation_date DEFAULT SYSDATETIME(),
+    CONSTRAINT PK_RESERVATIONS PRIMARY KEY CLUSTERED (reservation_id)
+);
+
+CREATE TABLE dbo.ROOM_TYPES
+(
+    room_type_id INT IDENTITY(1,1) NOT NULL,
+    name NVARCHAR(60) NOT NULL,
+    capacity INT NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    CONSTRAINT PK_ROOM_TYPES PRIMARY KEY CLUSTERED (room_type_id)
+);
+
+CREATE TABLE dbo.ROOM_STATES
+(
+    state_id INT IDENTITY(1,1) NOT NULL,
+    state_name NVARCHAR(40) NOT NULL,
+    CONSTRAINT PK_ROOM_STATES PRIMARY KEY CLUSTERED (state_id)
+);
+
+CREATE TABLE dbo.ROOMS
+(
+    room_id INT IDENTITY(1,1) NOT NULL,
+    room_type_id INT NOT NULL,
+    room_floor INT NOT NULL,
+    room_number NVARCHAR(20) NOT NULL,
+    state_id INT NOT NULL,
+    CONSTRAINT PK_ROOMS PRIMARY KEY CLUSTERED (room_id)
+);
+
+CREATE TABLE dbo.RESERVATION_ROOMS
+(
+    reservation_room_id INT IDENTITY(1,1) NOT NULL,
+    reservation_id INT NOT NULL,
+    room_id INT NOT NULL,
+    CONSTRAINT PK_RESERVATION_ROOMS PRIMARY KEY CLUSTERED (reservation_room_id)
+);
+
+CREATE TABLE dbo.STAY_STATES
+(
+    stay_state_id INT IDENTITY(1,1) NOT NULL,
+    stay_state_name NVARCHAR(40) NOT NULL,
+    CONSTRAINT PK_STAY_STATES PRIMARY KEY CLUSTERED (stay_state_id)
+);
+
+CREATE TABLE dbo.STAYS
+(
+    stay_id INT IDENTITY(1,1) NOT NULL,
+    reservation_id INT NOT NULL,
+    check_in_date DATETIME2(0) NOT NULL,
+    check_out_date DATETIME2(0) NULL,
+    user_check_in_id INT NOT NULL,
+    user_check_out_id INT NULL,
+    stay_state_id INT NOT NULL,
+    CONSTRAINT PK_STAYS PRIMARY KEY CLUSTERED (stay_id)
+);
+
+CREATE TABLE dbo.SERVICES
+(
+    service_id INT IDENTITY(1,1) NOT NULL,
+    name NVARCHAR(80) NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    capacity INT NOT NULL,
+    description NVARCHAR(300) NULL,
+    availability BIT NOT NULL CONSTRAINT DF_SERVICES_availability DEFAULT 1,
+    reservation_needed BIT NOT NULL CONSTRAINT DF_SERVICES_reservation_needed DEFAULT 1,
+    CONSTRAINT PK_SERVICES PRIMARY KEY CLUSTERED (service_id)
+);
+
+CREATE TABLE dbo.RESERVATION_SERVICE_STATES
+(
+    reservation_service_state_id INT IDENTITY(1,1) NOT NULL,
+    reservation_service_state_name NVARCHAR(40) NOT NULL,
+    CONSTRAINT PK_RESERVATION_SERVICE_STATES PRIMARY KEY CLUSTERED (reservation_service_state_id)
+);
+
+CREATE TABLE dbo.RESERVATION_SERVICES
+(
+    reservation_service_id INT IDENTITY(1,1) NOT NULL,
+    reservation_id INT NOT NULL,
+    service_id INT NOT NULL,
+    service_date DATETIME2(0) NOT NULL,
+    quantity INT NOT NULL,
+    unitary_price DECIMAL(10,2) NOT NULL,
+    reservation_service_state_id INT NOT NULL,
+    CONSTRAINT PK_RESERVATION_SERVICES PRIMARY KEY CLUSTERED (reservation_service_id)
+);
+
+CREATE TABLE dbo.CHARGE_TYPES
+(
+    charge_type_id INT IDENTITY(1,1) NOT NULL,
+    name NVARCHAR(40) NOT NULL,
+    CONSTRAINT PK_CHARGE_TYPES PRIMARY KEY CLUSTERED (charge_type_id)
+);
+
+CREATE TABLE dbo.CHARGES
+(
+    charge_id INT IDENTITY(1,1) NOT NULL,
+    reservation_id INT NOT NULL,
+    charge_type_id INT NOT NULL,
+    reservation_room_id INT NULL,
+    reservation_service_id INT NULL,
+    description NVARCHAR(200) NOT NULL,
+    quantity INT NOT NULL,
+    unitary_price DECIMAL(10,2) NOT NULL,
+    subtotal DECIMAL(10,2) NOT NULL,
+    taxes DECIMAL(10,2) NOT NULL CONSTRAINT DF_CHARGES_taxes DEFAULT 0,
+    total DECIMAL(10,2) NOT NULL,
+    charge_date DATETIME2(0) NOT NULL CONSTRAINT DF_CHARGES_charge_date DEFAULT SYSDATETIME(),
+    CONSTRAINT PK_CHARGES PRIMARY KEY CLUSTERED (charge_id)
+);
+
+CREATE TABLE dbo.PAYMENT_METHODS
+(
+    payment_method_id INT IDENTITY(1,1) NOT NULL,
+    payment_method_name NVARCHAR(50) NOT NULL,
+    CONSTRAINT PK_PAYMENT_METHODS PRIMARY KEY CLUSTERED (payment_method_id)
+);
+
+CREATE TABLE dbo.PAYMENT_STATES
+(
+    payment_state_id INT IDENTITY(1,1) NOT NULL,
+    payment_state_name NVARCHAR(40) NOT NULL,
+    CONSTRAINT PK_PAYMENT_STATES PRIMARY KEY CLUSTERED (payment_state_id)
+);
+
+CREATE TABLE dbo.PAYMENTS
+(
+    payment_id INT IDENTITY(1,1) NOT NULL,
+    reservation_id INT NOT NULL,
+    amount DECIMAL(10,2) NOT NULL,
+    payment_date DATETIME2(0) NOT NULL CONSTRAINT DF_PAYMENTS_payment_date DEFAULT SYSDATETIME(),
+    payment_method_id INT NOT NULL,
+    payment_state_id INT NOT NULL,
+    CONSTRAINT PK_PAYMENTS PRIMARY KEY CLUSTERED (payment_id)
+);

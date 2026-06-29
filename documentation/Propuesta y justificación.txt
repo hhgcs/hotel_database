@@ -1,0 +1,25 @@
+Propuesta y justificación:
+
+El sistema de gestión de reservas propuesto centraliza las operaciones necesarias para la correcta operación de un hotel en una base de datos normalizada, segura y eficiente.
+
+Los beneficios operativos al migrar a nuestro sistema son los siguientes:
+
+Mejora de eficiencia operativa:
+
+El empleo de vistas y procedimientos almacenados permite a los usuarios del sistema consultar reservas, habitaciones asignadas, cargos pendientes y pagos. El personal del hotel puede ejecutar flujos predefinidos de check-in, reserva de servicios y check-out sin modificar manualmente varias tablas.
+
+Asignación de habitaciones automatizada
+
+La asignación de habitaciones ha sido implementada mediante la verificación de disponibilidad a través de fechas de reserva, así como el estado físico de la habitación. Esto asegura que ninguna habitación que no esté disponible sea asignada a una reservación. El personal puede estar seguro de que la gestión de habitaciones es eficaz.
+
+Conveniencia y transparencia para el cliente
+
+Cada una de las transacciones del cliente queda almacenada y puede consultarse de forma ordenada. Reservas, servicios, cargos y pagos quedan conectados con el cliente, por lo que se ofrece mayor transparencia durante su estancia.
+
+Certidumbre en el proceso de pagos
+
+El sistema incluye distintos métodos de pago y separa cargos, es decir adeudos, de los pagos recibidos. Esto permite generar saldos a pagar para que el cliente pueda liquidar su cuenta durante el check-out.
+
+Integridad y seguridad
+
+El sistema cifra la información personal y utiliza triggers para asegurarse de que ningún dato sensible se almacene en la base de datos de manera legible. También se aplican hashes a las contraseñas de usuarios y se incluye un ejemplo de respaldo cifrado.

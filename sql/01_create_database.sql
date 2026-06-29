@@ -1,0 +1,11 @@
+USE master;
+GO
+
+IF DB_ID(N'HotelDatabase') IS NULL
+BEGIN
+    CREATE DATABASE HotelDatabase;
+END;
+GO
+
+ALTER DATABASE HotelDatabase SET RECOVERY SIMPLE;
+GO

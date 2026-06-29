@@ -1,0 +1,9 @@
+purpose: 
+
+adds the necessary constraints for integrity purposes
+
+verification query:
+
+SELECT COUNT(*) AS untrusted_foreign_keys
+FROM sys.foreign_keys
+WHERE is_not_trusted = 1;

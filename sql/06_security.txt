@@ -1,0 +1,29 @@
+purpose:
+
+to implement security procedures to protect customer's and user's sensitive data
+
+It creates:
+
+	Master: 
+		- Masterkey
+		- Certificate (BackupCertificate_HotelDatabase)
+
+	HotelDatabase:
+		- db Masterkey
+		- Certificate (Certificate_HotelClientData)
+		- Symetrical key (SymmetricKey_HotelClientData)
+		- 2 fucntions:
+			- dbo.fn_EmailHash
+			- dbo.fn_PasswordHash
+
+email and phone number are stored encrypted with the symmetric key
+email is also hashed (sha-256) to allow querying by email without having to store its original value
+user's passwords are stored with salt and sha-256
+
+verification query: 
+
+SELECT name
+FROM sys.symmetric_keys
+WHERE name = N'SymmetricKey_HotelClientData';
+
+SELECT CONVERT(VARCHAR(64), dbo.fn_EmailHash(N'test@example.com'), 2) AS email_hash_hex;
